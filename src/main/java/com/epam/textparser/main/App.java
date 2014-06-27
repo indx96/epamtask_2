@@ -4,7 +4,6 @@ import com.epam.textparser.parser.TextParser;
 import com.epam.textparser.parser.TextParserBuilder;
 import com.epam.textparser.parser.TextParserBuilder.RegexType;
 import com.epam.textparser.textcomponents.ComponentContainer;
-import com.epam.textparser.textprocessors.TextProcessor;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -17,7 +16,7 @@ import java.util.Scanner;
 public class App {
     static {
         PropertyConfigurator.configure(ClassLoader
-                .getSystemClassLoader().getResourceAsStream("log4j.properties"));
+                .getSystemClassLoader().getResourceAsStream("props/log4j.properties"));
     }
 
     private static Logger log = Logger.getLogger(App.class);
@@ -26,12 +25,12 @@ public class App {
 
         // Load text
         Scanner in = new Scanner(
-                ClassLoader.getSystemClassLoader().getResourceAsStream("text.txt"));
+                ClassLoader.getSystemClassLoader().getResourceAsStream("text/text.txt"));
         String textString = in.useDelimiter("\\Z").next();
 
         // Create text parser
         TextParserBuilder builder = new TextParserBuilder();
-        ResourceBundle bundle = ResourceBundle.getBundle("patterns");
+        ResourceBundle bundle = ResourceBundle.getBundle("props/patterns");
         Map<TextParserBuilder.RegexType, String> regexMap = new HashMap<>();
         regexMap.put(RegexType.PARAGRAPH, bundle.getString("paragraphRegExp"));
         regexMap.put(RegexType.SENTENCE, bundle.getString("sentenceRegExp"));

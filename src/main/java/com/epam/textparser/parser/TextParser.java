@@ -25,10 +25,10 @@ public class TextParser {
     private ParagraphParser paragraphParser;
     private static Logger log = Logger.getLogger(TextParser.class);
 
-    public ComponentContainer parse(String stringText) {
+    public ComponentContainer parse(String text) {
         Pattern pattern = Pattern.compile(paragraphRegExp + "|" + sourceCodeRegExp, Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(stringText);
-        ComponentContainer text = new ComponentContainer(ComponentContainer.Type.TEXT);
+        Matcher matcher = pattern.matcher(text);
+        ComponentContainer textContainer = new ComponentContainer(ComponentContainer.Type.TEXT);
 
         while (matcher.find()) {
             String paragraphOrSource = matcher.group();
@@ -37,16 +37,16 @@ public class TextParser {
                 log.debug("this is paragraph");
                 ComponentContainer paragraph =
                         paragraphParser.parse(paragraphOrSource);
-                text.addComponent(paragraph);
+                textContainer.addComponent(paragraph);
             } else {
                 log.debug("this is code in text");
                 Lexeme sourceCode =
                         new Lexeme(paragraphOrSource, Lexeme.Type.SOURCE_CODE);
-                text.addComponent(sourceCode);
+                textContainer.addComponent(sourceCode);
             }
         }
 
-        return text;
+        return textContainer;
     }
 
 
