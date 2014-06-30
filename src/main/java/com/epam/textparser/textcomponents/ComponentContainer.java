@@ -8,11 +8,7 @@ import java.util.List;
  * Created by ivan on 6/25/14.
  */
 public class ComponentContainer implements TextComponent {
-    private ArrayList<TextComponent> components = new ArrayList<TextComponent>();
-
-    public enum Type {TEXT, PARAGRAPH, SENTENCE}
-
-    ;
+    private ArrayList<TextComponent> components = new ArrayList<>();
     private Type type;
 
     public ComponentContainer(Type type) {
@@ -53,7 +49,9 @@ public class ComponentContainer implements TextComponent {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        components.forEach((component) -> builder.append(component + " "));
+        components.forEach((component) -> builder.append(component).append(" "));
         return builder.toString();
     }
+
+    public enum Type {TEXT, PARAGRAPH, SENTENCE}
 }

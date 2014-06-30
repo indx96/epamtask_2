@@ -2,15 +2,11 @@ package com.epam.textparser.textcomponents;
 
 import com.epam.textparser.exceptions.LexemeNullException;
 
-/**
- * Created by ivan on 6/25/14.
- */
 public class Lexeme implements TextComponent {
     private String lexeme;
     private Type type;
-    public enum Type{PUNCTUATION, SOURCE_CODE, WORD};
 
-    public Lexeme (String lexeme, Type type) {
+    public Lexeme(String lexeme, Type type) {
         if (lexeme == null) {
             throw new LexemeNullException();
         }
@@ -18,7 +14,8 @@ public class Lexeme implements TextComponent {
         this.type = type;
     }
 
-    public Type getType(){
+
+    public Type getType() {
         return type;
     }
 
@@ -38,15 +35,14 @@ public class Lexeme implements TextComponent {
 
         Lexeme lexeme1 = (Lexeme) o;
 
-        if (!lexeme.equals(lexeme1.lexeme)) {
-            return false;
-        }
+        return lexeme.equals(lexeme1.lexeme);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         return lexeme.hashCode();
     }
+
+    public enum Type {PUNCTUATION, SOURCE_CODE, WORD}
 }

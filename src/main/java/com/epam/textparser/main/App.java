@@ -4,13 +4,13 @@ import com.epam.textparser.parser.TextParser;
 import com.epam.textparser.parser.TextParserBuilder;
 import com.epam.textparser.parser.TextParserBuilder.RegexType;
 import com.epam.textparser.textcomponents.ComponentContainer;
+import com.epam.textparser.textloaders.TextLoader;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 
 public class App {
@@ -24,9 +24,9 @@ public class App {
     public static void main(String[] args) {
 
         // Load text
-        Scanner in = new Scanner(
-                ClassLoader.getSystemClassLoader().getResourceAsStream("text/text.txt"));
-        String textString = in.useDelimiter("\\Z").next();
+        String textString = TextLoader
+                .getInstance()
+                .loadTextFromResources("text/text.txt");
 
         // Create text parser
         TextParserBuilder builder = new TextParserBuilder();
