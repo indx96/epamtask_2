@@ -5,6 +5,7 @@ import com.epam.textparser.parser.TextParserBuilder;
 import com.epam.textparser.parser.TextParserBuilder.RegexType;
 import com.epam.textparser.textcomponents.ComponentContainer;
 import com.epam.textparser.textloaders.TextLoader;
+import com.epam.textparser.textprocessors.TextProcessor;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -41,5 +42,9 @@ public class App {
         TextParser textParser = builder.build(regexMap);
 
         ComponentContainer text = textParser.parse(textString);
+        log.debug(text);
+        log.debug(TextProcessor
+                .getInstance()
+                .findUniqWordForFirstSentence(text));
     }
 }

@@ -33,23 +33,13 @@ public class ComponentContainer implements TextComponent {
 
     public boolean replaceComponent(TextComponent componentToReplace,
                                     TextComponent componentToAdd) {
-        if (componentToReplace == componentToAdd) {
-            return false;
-        }
-
-        if (components.remove(componentToReplace)) {
-            components.add(componentToAdd);
-            return true;
-        } else {
-            return false;
-        }
-
+        return Collections.replaceAll(components, componentToReplace, componentToAdd);
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        components.forEach((component) -> builder.append(component).append(" "));
+        components.forEach((component) -> builder.append(component));
         return builder.toString();
     }
 

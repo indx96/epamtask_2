@@ -18,15 +18,16 @@ public class TextParser {
         this.paragraphRegExp = paragraphRegExp;
         this.paragraphParser = paragraphParser;
         this.sourceCodeRegExp = sourceCodeRegExp;
+        pattern = Pattern.compile(paragraphRegExp + "|" + sourceCodeRegExp);
     }
 
     private String paragraphRegExp;
     private String sourceCodeRegExp;
     private ParagraphParser paragraphParser;
+    private Pattern pattern;
     private static Logger log = Logger.getLogger(TextParser.class);
 
     public ComponentContainer parse(String text) {
-        Pattern pattern = Pattern.compile(paragraphRegExp + "|" + sourceCodeRegExp, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(text);
         ComponentContainer textContainer = new ComponentContainer(ComponentContainer.Type.TEXT);
 
@@ -38,11 +39,14 @@ public class TextParser {
                 ComponentContainer paragraph =
                         paragraphParser.parse(paragraphOrSource);
                 textContainer.addComponent(paragraph);
-            } else {
+            } else if (Pattern.matches(sourceCodeRegExp, paragraphOrSource)) {
                 log.debug("this is code in text");
                 Lexeme sourceCode =
                         new Lexeme(paragraphOrSource, Lexeme.Type.SOURCE_CODE);
                 textContainer.addComponent(sourceCode);
+            } else {
+                log.debug("this is unknown lexeme in paragraph");
+                textContainer.addComponent(new Lexeme(paragraphOrSource, Lexeme.Type.UNKNOWN));
             }
         }
 

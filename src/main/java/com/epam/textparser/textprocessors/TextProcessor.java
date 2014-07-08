@@ -52,6 +52,7 @@ public class TextProcessor {
         Iterator<TextComponent> iterator = sentence.getComponents()
                 .stream()
                 .filter((c) -> c instanceof Lexeme)
+                .filter((c) -> ((Lexeme)c).getType() == Lexeme.Type.WORD)
                 .iterator();
         while (iterator.hasNext()){
             Lexeme lexeme =  (Lexeme) iterator.next();
@@ -70,11 +71,12 @@ public class TextProcessor {
             if (component == firstSentence){
                 return false;
             }
-            boolean result = false;
             for(TextComponent c : ((ComponentContainer)component).getComponents()) {
-                result = result || isInRestText(c, firstSentence, word);
+                if ( isInRestText(c, firstSentence, word)) {
+                    return true;
+                }
             }
-            return result;
+            return false;
         } else {
             return ((Lexeme) component).equals(word);
         }

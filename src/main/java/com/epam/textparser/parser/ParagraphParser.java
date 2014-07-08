@@ -14,7 +14,7 @@ public class ParagraphParser {
 
     ParagraphParser(String sentenceRegExp,
                     SentenceParser sentenceParser) {
-        pattern = Pattern.compile(sentenceRegExp, Pattern.DOTALL);
+        pattern = Pattern.compile(sentenceRegExp);
         this.sentenceParser = sentenceParser;
     }
 

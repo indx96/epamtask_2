@@ -18,16 +18,17 @@ public class SentenceParser {
         this.punctuationRegExp = punctuationRegExp;
         this.wordRegExp = wordRegExp;
         this.sourceCodeRegExp = sourceCodeRegExp;
+        pattern = Pattern.compile(sourceCodeRegExp + "|" +wordRegExp + "|"
+                + punctuationRegExp);
     }
 
     private String punctuationRegExp;
     private String wordRegExp;
     private String sourceCodeRegExp;
+    private Pattern pattern;
     private static Logger log = Logger.getLogger(SentenceParser.class);
 
     public ComponentContainer parse(String textSentence) {
-        Pattern pattern = Pattern.compile(wordRegExp + "|"
-                + punctuationRegExp + "|" + sourceCodeRegExp, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(textSentence);
         ComponentContainer sentence = new ComponentContainer(ComponentContainer.Type.SENTENCE);
 
@@ -41,9 +42,11 @@ public class SentenceParser {
             } else if (Pattern.matches(wordRegExp, textLexeme)) {
                 log.debug("this is word");
                 type = Lexeme.Type.WORD;
-            } else {
+            } else if (Pattern.matches(sourceCodeRegExp, textLexeme)) {
                 log.debug("this is source code");
                 type = Lexeme.Type.SOURCE_CODE;
+            } else {
+                type = Lexeme.Type.UNKNOWN;
             }
             Lexeme lexeme = new Lexeme(textLexeme, type);
             sentence.addComponent(lexeme);

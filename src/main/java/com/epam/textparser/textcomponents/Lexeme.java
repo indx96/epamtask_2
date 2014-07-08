@@ -7,7 +7,7 @@ public class Lexeme implements TextComponent {
     private Type type;
 
     public Lexeme(String lexeme, Type type) {
-        if (lexeme == null) {
+        if (lexeme == null || type == null) {
             throw new LexemeNullException();
         }
         this.lexeme = lexeme;
@@ -44,5 +44,5 @@ public class Lexeme implements TextComponent {
         return lexeme.hashCode();
     }
 
-    public enum Type {PUNCTUATION, SOURCE_CODE, WORD}
+    public enum Type {PUNCTUATION, SOURCE_CODE, WORD, UNKNOWN}
 }
