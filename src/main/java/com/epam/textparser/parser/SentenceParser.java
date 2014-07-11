@@ -2,6 +2,7 @@ package com.epam.textparser.parser;
 
 import com.epam.textparser.textcomponents.ComponentContainer;
 import com.epam.textparser.textcomponents.Lexeme;
+import com.epam.textparser.textcomponents.TextComponentType;
 import org.apache.log4j.Logger;
 
 import java.util.regex.Matcher;
@@ -10,7 +11,13 @@ import java.util.regex.Pattern;
 /**
  * Created by ivan on 6/26/14.
  */
-public class SentenceParser {
+class SentenceParser {
+
+    private static Logger log = Logger.getLogger(SentenceParser.class);
+    private String punctuationRegExp;
+    private String wordRegExp;
+    private String sourceCodeRegExp;
+    private Pattern pattern;
 
     SentenceParser(String wordRegExp,
                    String sourceCodeRegExp,
@@ -18,35 +25,26 @@ public class SentenceParser {
         this.punctuationRegExp = punctuationRegExp;
         this.wordRegExp = wordRegExp;
         this.sourceCodeRegExp = sourceCodeRegExp;
-        pattern = Pattern.compile(sourceCodeRegExp + "|" +wordRegExp + "|"
+        pattern = Pattern.compile(sourceCodeRegExp + "|" + wordRegExp + "|"
                 + punctuationRegExp);
     }
 
-    private String punctuationRegExp;
-    private String wordRegExp;
-    private String sourceCodeRegExp;
-    private Pattern pattern;
-    private static Logger log = Logger.getLogger(SentenceParser.class);
-
     public ComponentContainer parse(String textSentence) {
         Matcher matcher = pattern.matcher(textSentence);
-        ComponentContainer sentence = new ComponentContainer(ComponentContainer.Type.SENTENCE);
+        ComponentContainer sentence = new ComponentContainer(TextComponentType.SENTENCE);
 
-        while (matcher.find()){
+        while (matcher.find()) {
             String textLexeme = matcher.group();
             log.debug("found: " + textLexeme);
-            Lexeme.Type type;
+            TextComponentType type = TextComponentType.PUNCTUATION;
             if (Pattern.matches(punctuationRegExp, textLexeme)) {
                 log.debug("this is punctuation");
-                type = Lexeme.Type.PUNCTUATION;
             } else if (Pattern.matches(wordRegExp, textLexeme)) {
                 log.debug("this is word");
-                type = Lexeme.Type.WORD;
+                type = TextComponentType.WORD;
             } else if (Pattern.matches(sourceCodeRegExp, textLexeme)) {
                 log.debug("this is source code");
-                type = Lexeme.Type.SOURCE_CODE;
-            } else {
-                type = Lexeme.Type.UNKNOWN;
+                type = TextComponentType.SOURCE_CODE;
             }
             Lexeme lexeme = new Lexeme(textLexeme, type);
             sentence.addComponent(lexeme);

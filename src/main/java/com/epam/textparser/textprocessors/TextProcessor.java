@@ -4,6 +4,7 @@ import com.epam.textparser.exceptions.TextProcessingException;
 import com.epam.textparser.textcomponents.ComponentContainer;
 import com.epam.textparser.textcomponents.Lexeme;
 import com.epam.textparser.textcomponents.TextComponent;
+import com.epam.textparser.textcomponents.TextComponentType;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -13,38 +14,41 @@ import java.util.Optional;
  */
 public class TextProcessor {
     private static TextProcessor instance;
-    public static TextProcessor getInstance(){
+
+    private TextProcessor() {
+    }
+
+    public static TextProcessor getInstance() {
         if (instance == null) {
             instance = new TextProcessor();
         }
         return instance;
     }
 
-    private TextProcessor(){}
-
-    public Optional<Lexeme> findUniqWordForFirstSentence(ComponentContainer text) {
-        if (text.getType() != ComponentContainer.Type.TEXT){
-            throw new TextProcessingException("text sholud be TEXT container type");
+    public Optional<Lexeme> findUniqueWordForFirstSentence(ComponentContainer text)
+            throws TextProcessingException {
+        if (text.getType() != TextComponentType.TEXT) {
+            throw new TextProcessingException(new IllegalAccessException("text should be TEXT container type"));
         }
 
         // Find first paragraph
         Optional<TextComponent> optionParagraph = text.getComponents()
                 .stream()
-                .filter((component) -> component instanceof ComponentContainer )
-                .filter((component) -> ((ComponentContainer) component).getType() == ComponentContainer.Type.PARAGRAPH)
+                .filter((component) -> component instanceof ComponentContainer)
+                .filter((component) -> ((ComponentContainer) component).getType() == TextComponentType.PARAGRAPH)
                 .findFirst();
         if (!optionParagraph.isPresent()) {
             return Optional.empty();
         }
 
         // Find first sentence
-        ComponentContainer paragraph  = (ComponentContainer)optionParagraph.get();
+        ComponentContainer paragraph = (ComponentContainer) optionParagraph.get();
         Optional<TextComponent> optionSentence = paragraph.getComponents()
                 .stream()
                 .filter((component) -> component instanceof ComponentContainer)
-                .filter((component) -> ((ComponentContainer) component).getType() == ComponentContainer.Type.SENTENCE)
+                .filter((component) -> ((ComponentContainer) component).getType() == TextComponentType.SENTENCE)
                 .findFirst();
-        if (!optionSentence.isPresent()){
+        if (!optionSentence.isPresent()) {
             return Optional.empty();
         }
 
@@ -52,11 +56,11 @@ public class TextProcessor {
         Iterator<TextComponent> iterator = sentence.getComponents()
                 .stream()
                 .filter((c) -> c instanceof Lexeme)
-                .filter((c) -> ((Lexeme)c).getType() == Lexeme.Type.WORD)
+                .filter((c) -> ((Lexeme) c).getType() == TextComponentType.WORD)
                 .iterator();
-        while (iterator.hasNext()){
-            Lexeme lexeme =  (Lexeme) iterator.next();
-            if (!isInRestText(text, sentence, lexeme)){
+        while (iterator.hasNext()) {
+            Lexeme lexeme = (Lexeme) iterator.next();
+            if (!isInRestText(text, sentence, lexeme)) {
                 return Optional.of(lexeme);
             }
         }
@@ -68,17 +72,17 @@ public class TextProcessor {
                                  ComponentContainer firstSentence,
                                  Lexeme word) {
         if (component instanceof ComponentContainer) {
-            if (component == firstSentence){
+            if (component == firstSentence) {
                 return false;
             }
-            for(TextComponent c : ((ComponentContainer)component).getComponents()) {
-                if ( isInRestText(c, firstSentence, word)) {
+            for (TextComponent c : ((ComponentContainer) component).getComponents()) {
+                if (isInRestText(c, firstSentence, word)) {
                     return true;
                 }
             }
             return false;
         } else {
-            return ((Lexeme) component).equals(word);
+            return component.equals(word);
         }
     }
 

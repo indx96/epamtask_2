@@ -1,21 +1,22 @@
 package com.epam.textparser.textcomponents;
 
-import com.epam.textparser.exceptions.LexemeNullException;
+import com.epam.textparser.exceptions.LexemeInvalidArgumentsException;
 
 public class Lexeme implements TextComponent {
     private String lexeme;
-    private Type type;
+    private TextComponentType type;
 
-    public Lexeme(String lexeme, Type type) {
+    public Lexeme(String lexeme, TextComponentType type) {
         if (lexeme == null || type == null) {
-            throw new LexemeNullException();
+            throw new LexemeInvalidArgumentsException(
+                    new IllegalArgumentException("Text of lexeme can't be null. Type too."));
         }
         this.lexeme = lexeme;
         this.type = type;
     }
 
 
-    public Type getType() {
+    public TextComponentType getType() {
         return type;
     }
 
@@ -44,5 +45,4 @@ public class Lexeme implements TextComponent {
         return lexeme.hashCode();
     }
 
-    public enum Type {PUNCTUATION, SOURCE_CODE, WORD, UNKNOWN}
 }

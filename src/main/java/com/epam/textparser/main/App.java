@@ -1,5 +1,7 @@
 package com.epam.textparser.main;
 
+import com.epam.textparser.exceptions.TextParserBuildingException;
+import com.epam.textparser.exceptions.TextProcessingException;
 import com.epam.textparser.parser.TextParser;
 import com.epam.textparser.parser.TextParserBuilder;
 import com.epam.textparser.parser.TextParserBuilder.RegexType;
@@ -39,12 +41,17 @@ public class App {
         regexMap.put(RegexType.WORD, bundle.getString("wordRegExp"));
         regexMap.put(RegexType.SENTENCE_SOURCE_CODE, bundle.getString("sentenceSourceCode"));
         regexMap.put(RegexType.PUNCTUATION, bundle.getString("punctuation"));
-        TextParser textParser = builder.build(regexMap);
-
-        ComponentContainer text = textParser.parse(textString);
-        log.debug(text);
-        log.debug(TextProcessor
-                .getInstance()
-                .findUniqWordForFirstSentence(text));
+        try {
+            TextParser textParser = builder.build(regexMap);
+            ComponentContainer text = textParser.parse(textString);
+            log.debug(text);
+            log.debug(TextProcessor
+                    .getInstance()
+                    .findUniqueWordForFirstSentence(text));
+        } catch (TextParserBuildingException e) {
+            log.error(e);
+        } catch (TextProcessingException e) {
+            log.error(e);
+        }
     }
 }

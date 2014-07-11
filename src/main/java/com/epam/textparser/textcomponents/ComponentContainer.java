@@ -9,13 +9,13 @@ import java.util.List;
  */
 public class ComponentContainer implements TextComponent {
     private ArrayList<TextComponent> components = new ArrayList<>();
-    private Type type;
+    private TextComponentType type;
 
-    public ComponentContainer(Type type) {
+    public ComponentContainer(TextComponentType type) {
         this.type = type;
     }
 
-    public Type getType() {
+    public TextComponentType getType() {
         return type;
     }
 
@@ -39,9 +39,8 @@ public class ComponentContainer implements TextComponent {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        components.forEach((component) -> builder.append(component));
+        components.forEach(builder::append);
         return builder.toString();
     }
 
-    public enum Type {TEXT, PARAGRAPH, SENTENCE}
 }
